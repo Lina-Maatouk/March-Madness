@@ -28,18 +28,13 @@ rm(list = ls())
 
 #reads in all the .csv files
 GameData <- read.csv("2023 Tournament Data.csv")
-TournamentGameData <- read.csv("Tournament Game Data.csv")
+AllYearsGameData <- read.csv("Tournament Game Data.csv")
 
 
 #1. cleaning for Game Data, filtering out teams that are not in the tournamnet
 cleanGameData <- GameData %>%
-  distinct(.keep_all = TRUE) %>%
-  filter(TEAM != "Rutgers", TEAM != "Wisconsin", TEAM != "Bradley", TEAM != "Liberty",
-         TEAM != "Southern Miss", TEAM != "Utah Valley", TEAM != "Toledo", 
-         TEAM != "Yale", TEAM != "UC Irvine", TEAM != "Eastern Washington", 
-         TEAM != "Texas A&M-Corpus Christi", TEAM != "Grambling", TEAM != "Youngstown State",
-         TEAM != "Morehead State")
-#cleanGameData <- cleanGameData[-57, , drop = FALSE]
+  select(SEED, TEAM, KENPOM.ADJUSTED.DEFENSE, KENPOM.ADJUSTED.OFFENSE, ELITE.SOS, EFG.., WIN.., BARTHAG) %>%
+  rename(Seed = SEED, Team = TEAM, DefenseKP = KENPOM.ADJUSTED.DEFENSE, OffenseKP = KENPOM.ADJUSTED.OFFENSE, SOS = ELITE.SOS, Barthag = BARTHAG)
 
 #2. adding teams that made the playoffs into clean data.
 
