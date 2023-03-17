@@ -36,6 +36,7 @@ cleanGameData <- GameData %>%
   select(SEED, TEAM, KENPOM.ADJUSTED.DEFENSE, KENPOM.ADJUSTED.OFFENSE, ELITE.SOS, EFG.., WIN.., BARTHAG) %>%
   rename(Seed = SEED, Team = TEAM, DefenseKP = KENPOM.ADJUSTED.DEFENSE, OffenseKP = KENPOM.ADJUSTED.OFFENSE, SOS = ELITE.SOS, Barthag = BARTHAG)
 
+saveRDS(cleanGameData, "GameData.rds")
 #2. adding teams that made the playoffs into clean data.
 
 
