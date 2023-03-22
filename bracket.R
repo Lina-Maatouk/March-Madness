@@ -1,0 +1,16 @@
+library(tidytext)
+library(textdata)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(ggplot2)
+library(wordcloud)
+library(sentimentr)
+library(reshape2)
+library(readr)
+library(shiny)
+library(DT)
+library(lubridate)
+
+rm(list = ls())
+
