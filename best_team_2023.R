@@ -190,7 +190,6 @@ setDT(power_ranking_metric)
 #merging Overall_Team_Rating metric with top_performers_2023
 top_performers_2023 <- top_performers_2023[power_ranking_metric, Overall_Team_Rating:= i.Overall_Team_Rating,on =.(Team = Team)]
 
-
 #dynamic shiny app visualizations
 ui<-fluidPage( 
   

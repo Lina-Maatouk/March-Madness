@@ -17,31 +17,20 @@ rm(list = ls())
 
 
 #reads in all the .csv files
-team_data <- readRDS("GameData.rds")
-
-top_performers_2023 <- team_data %>%
-  select(Seed, Team, OffenseKP, DefenseKP, Barthag, SOS, EFG.., WIN..) %>%
-  mutate(Offensive_Rating = OffenseKP/124.0870,
-         Defensive_Rating = 87.3259/DefenseKP,
-         National_Rank = Barthag/.959,
-         Strength_of_Schedule = SOS/38.469,
-         Effective_Field_Goal_Percent = EFG../58.6,
-         Win_Percentage = WIN../91.17647,
-         Current_Year_Strength = Offensive_Rating + Defensive_Rating + National_Rank + Strength_of_Schedule + Effective_Field_Goal_Percent + Win_Percentage)
+team_data <- readRDS("top_performers_2023.rds")
 
 #making simple bracket with just Seed, Team, and Strength
-bracket <- top_performers_2023 %>%
-  select(Seed, Team, Current_Year_Strength)%>%
-  rename(Rating = Current_Year_Strength)
+bracket <- team_data %>%
+  select(Seed, Team, Overall_Team_Rating)%>%
+  rename(Rating = Overall_Team_Rating)
 
 teams <- c("Alabama", "Houston", "Kansas", "Purdue", "Arizona", "Marquette", "Texas", "UCLA", "Baylor", "Gonzaga", "Kansas St.", "Xavier", "Connecticut", "Indiana", "Tennessee", "Virginia", "Duke", "Miami FL", "Saint Mary's", "San Diego St.", "Creighton", "Iowa St.", "Kentucky", "TCU", "Michigan St.", "Missouri", "Northwestern", "Texas A&M", "Arkansas", "Iowa", "Maryland", "Memphis", "Auburn", "Florida Atlantic", "Illinois", "West Virginia", "Boise St.", "Penn St.", "USC", "Utah St.", "Arizona St.", "North Carolina St.", "Pittsburgh", "Providence", "College of Charleston", "Drake", "Oral Roberts", "VCU", "Furman", "Iona", "Kent St.", "Louisiana Lafayette", "Grand Canyon", "Kennesaw St.", "Montana St.", "UC Santa Barbara", "Colgate", "Princeton", "UNC Asheville", "Vermont", "Fairleigh Dickinson", "Howard", "Northern Kentucky", "Texas A&M Corpus Chris")
-#CHANGE THE REGIONS SO IT IS ACCURATE
 regions <- c("South", "Midwest", "West", "East", "South", "East",             "Midwest", "West", "South", "West", "East",         "Midwest", "West",       "Midwest", "East",      "South", "East",     "Midwest", "West",         "South",           "South", "Midwest",    "East", "West",      "East",            "South", "West",         "Midwest", "West", "Midwest", "South", "East",         "Midwest", "East", "West", "South",                            "West", "Midwest", "East", "South",        "West", "South",                "Midwest", "East",               "South",          "Midwest", "East",      "West", "South", "West", "Midwest", "East",                     "West", "Midwest",           "East",        "South",          "Midwest", "South", "West", "East",                   "East",                      "West", "Midwest",         "South")
 teamsRegions <- data.frame(Team = teams, Region = regions)
 
 bracket <- left_join(bracket, teamsRegions, by = "Team") %>%
-  na.omit(bracket)%>%
   arrange(desc(Region))
+bracket <- na.omit(bracket) 
 
 
 bracket$Round1 <- 0
@@ -53,7 +42,7 @@ bracket$Championship <- 0
 
 #### variability added ###
 lowerOffset <- .75
-higherOffset <- 1.50
+higherOffset <- 1.25
 
 ############ EAST BRACKET #########
 bracketEast <- bracket$Region == "East"
