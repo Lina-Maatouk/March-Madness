@@ -10,7 +10,7 @@ library(lubridate)
 
 rm(list = ls())
 
-setwd("C:/Users/lukec/OneDrive/Documents/data332/March-Madness/data")
+#setwd("C:/Users/lukec/OneDrive/Documents/data332/March-Madness/data")
 
 #reads in all the .csv files
 team_data <- readRDS("GameData.rds")
