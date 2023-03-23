@@ -1,12 +1,11 @@
-
 library(dplyr)
-library(stringr)
 library(tidyr)
 library(ggplot2)
 library(shiny)
 library(DT)
 library(data.table)
 library(lubridate)
+library(RColorBrewer)
 
 rm(list = ls())
 
@@ -28,7 +27,7 @@ top_performers_2023 <- team_data %>%
          Win_Percentage = WIN../91.17647,
          #combining the six stats above to determine the strongest teams based on the 2023 regular season
          Current_Year_Strength = Offensive_Rating + Defensive_Rating + National_Rank + Strength_of_Schedule + Effective_Field_Goal_Percent + Win_Percentage)
-         
+
 team_history_data <- tournament_game_data %>%
   #removing miscellaneous teams that are not in the 2023 NCAA March Madness Tournament
   dplyr::filter(TEAM %in%  c("Alabama", "Houston", "Kansas", "Purdue", "Arizona", "Marquette", "Texas", "UCLA",
@@ -175,6 +174,7 @@ top_performers_2023 <- top_performers_2023[tournament_performance, Historical_To
   replace(is.na(.), 0)
 
 #merging Historical_Strength metric with top_performers_2023
+#6 teams with no data are not assigned 0 values as with previous metric--they certainly would have had a higher rating had their regular season stats been included
 top_performers_2023 <- top_performers_2023[historical_season_strength, Historical_Strength:= i.Historical_Strength,on =.(Team = TEAM)]
 
 #creating data frame to calculate the strongest teams based on our final power ranking metric
@@ -182,36 +182,127 @@ power_ranking_metric <- top_performers_2023 %>%
   select(Seed, Team, Current_Year_Strength, Historical_Strength, Historical_Tournament_Strength) %>%
   #calculating final power ranking metric--number values are weights associated with variables and the top line is for the six teams without Historical_Strength values
   mutate(Overall_Team_Rating = ifelse(is.na(Historical_Strength), (Current_Year_Strength * 0.85 + Historical_Tournament_Strength * 0.15),
-                                     (Current_Year_Strength * 0.75 + Historical_Strength * 0.1 + Historical_Tournament_Strength * 0.15)))
-                                      
+                                      (Current_Year_Strength * 0.75 + Historical_Strength * 0.1 + Historical_Tournament_Strength * 0.15)))
+
+#making this data frame into a data table for the purpose of merging the newly calculated metric
+setDT(power_ranking_metric)
+
+#merging Overall_Team_Rating metric with top_performers_2023
+top_performers_2023 <- top_performers_2023[power_ranking_metric, Overall_Team_Rating:= i.Overall_Team_Rating,on =.(Team = Team)]
+
+
+#dynamic shiny app visualizations
+ui<-fluidPage( 
+  
+  titlePanel(title = "Explore NCAA College Basketball March Madness Datasets"),
+  h4("NCAA 2023 Tournament Teams Power Ranking"),
+  
+  #setting up data entry/selection areas for user
+  fluidRow(
+    column(2,
+           selectizeInput("Teams", label = "Choose 16 teams.", choices = top_performers_2023$Team, multiple = TRUE, options = list(maxItems = 16)),
+           actionButton("Button", "Go")
+    ),
+    #structuring charts so that they are displayed in a two-by-two grid format
+    verticalLayout(splitLayout(cellWidths = c("50%", "50%"), 
+                               plotOutput("plot_01"), 
+                               plotOutput("plot_02")),
+                   splitLayout(cellWidths = c("50%", "50%"),
+                               plotOutput("plot_03"),
+                               plotOutput("plot_04"))
+                   
+    )
+  )
+)
+
+
+
+server<-function(input,output){
+  #passing on inputs from the ui to the server to enable graphing
+  observeEvent(input$Button, {  
+    top_performers_2023 <- top_performers_2023[Team %in% input$Teams]
     
+    #visualization for team strength based on 2023 regular season stats
+    current_year_strength <- 
+      ggplot(top_performers_2023, aes(x = Team, y = Current_Year_Strength, fill = as.factor(Seed))) +
+      geom_col(show.legend = TRUE) +
+      coord_flip() + 
+      #titling and labeling the plot
+      labs(title = "Current Year Strength by Team", subtitle = "Best 2023 Regular Season Teams",y = "Current Year Strength",fill = "Tournament Seed") 
+    
+    #visualization for team strength based on their performance(s) in the March Madness tournament over the last 15 years
+    tournament_strength <- 
+      ggplot(top_performers_2023, aes(x = Team, y = Historical_Tournament_Strength, fill = as.factor(Seed))) +
+      scale_fill_brewer(palette="Paired") +
+      geom_col(show.legend = TRUE) +
+      coord_flip() + 
+      #titling and labeling the plot
+      labs(title = "Historical Tournament Strength by Team", subtitle = "Best Tournament Teams Last 15 Years", 
+           y = "Historical Tournament Strength", fill = "Tournament Seed") 
+    
+    #visualization for team strength based on their regular season stats in the years they made the tournament over the last 15 years
+    past_seasons_strength <- 
+      ggplot(top_performers_2023, aes(x = Team, y = Historical_Strength, fill = as.factor(Seed))) +
+      scale_fill_brewer(palette="Dark2") +
+      geom_col(show.legend = TRUE) +
+      coord_flip() + 
+      #titling and labeling the plot
+      labs(title = "Historical Regular Season Strength by Team", subtitle = "Best Regular Season Teams Last 15 Years", 
+           y = "Historical Regular Season Strength", fill = "Tournament Seed")  
+    
+    #visualization showing how strong a team is based on a weighted metric derived from the three previous visualizations' statistics
+    overall_strength <- 
+      ggplot(top_performers_2023, aes(x = Team, y = Overall_Team_Rating, size = Seed)) +
+      geom_point(color = "blue", alpha=0.8) +
+      scale_size(range = c(10, 2), name="Seed") +
+      coord_flip() +
+      #titling and labeling the plot
+      labs(title = "Overall Strength by Team", subtitle = "Power Ranking 2023 NCAA Tournament Teams", y = "Overall Team Rating")
+    
+    output$plot_01 = renderPlot({current_year_strength})
+    output$plot_02 = renderPlot({tournament_strength})
+    output$plot_03 = renderPlot({past_seasons_strength})
+    output$plot_04 = renderPlot({overall_strength})
+    
+  })
+  
+}
 
-  
-  
-  
-
-  
+shinyApp(ui=ui, server=server) 
 
 
 
-  
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-               
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
