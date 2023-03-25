@@ -5,11 +5,10 @@ library(shiny)
 library(DT)
 library(data.table)
 library(lubridate)
-library(RColorBrewer)
 
 rm(list = ls())
 
-#setwd("C:/Users/lukec/OneDrive/Documents/data332/March-Madness/data")
+setwd("C:/Users/lukec/OneDrive/Documents/data332/March-Madness/data")
 
 #reading in relevant data files
 team_data <- readRDS("GameData.rds")
@@ -232,7 +231,6 @@ server<-function(input,output){
     #visualization for team strength based on their performance(s) in the March Madness tournament over the last 15 years
     tournament_strength <- 
       ggplot(top_performers_2023, aes(x = Team, y = Historical_Tournament_Strength, fill = as.factor(Seed))) +
-      scale_fill_brewer(palette="Paired") +
       geom_col(show.legend = TRUE) +
       coord_flip() + 
       #titling and labeling the plot
@@ -242,7 +240,6 @@ server<-function(input,output){
     #visualization for team strength based on their regular season stats in the years they made the tournament over the last 15 years
     past_seasons_strength <- 
       ggplot(top_performers_2023, aes(x = Team, y = Historical_Strength, fill = as.factor(Seed))) +
-      scale_fill_brewer(palette="Dark2") +
       geom_col(show.legend = TRUE) +
       coord_flip() + 
       #titling and labeling the plot
