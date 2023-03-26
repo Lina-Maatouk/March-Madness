@@ -5,7 +5,7 @@ Interactive shiny app in which the user can select as many teams as possible and
 We used the data provided by the company 538: https://www.kaggle.com/datasets/raddar/ncaa-men-538-team-ratings
 
 Luke shiny app url:
- https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
+https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
@@ -168,7 +168,37 @@ tournament_performance <- team_history_data %>%
 - The four teams with the highest historcial regular season strength values from the previous visualization (Michigan State, Kansas, Duke, and Gonzaga) are also the four highest ranking within this visualization. While the two metrics do not directly mirror one another, this is evidence that teams with high regular season ratings (on the basis of the six statistics we utilized) are likely to perform well in the tournament.
 
 4. Who will be this year's winner?
+- In order to predict which team would win the entire tournament we created a final power ranking metric, Overall_Team_rating, based on the previous three metrics.
+```
+power_ranking_metric <- top_performers_2023 %>%
+  select(Seed, Team, Current_Year_Strength, Historical_Strength, Historical_Tournament_Strength) %>%
+  mutate(Overall_Team_Rating = ifelse(is.na(Historical_Strength), (Current_Year_Strength * 0.85 + Historical_Tournament_Strength * 0.15),
+                                      (Current_Year_Strength * 0.75 + Historical_Strength * 0.1 + Historical_Tournament_Strength * 0.15)))
+```
+- The 6 teams without historical regular season strength data do not have this metric factored into their overall rating. The defualt weighted average, however, consists of all three and is most dependent upon a team's performace during this year's regular season.
 
+<img src="Images/overall_strength.png"> <br>
+- While regular season performance is typically a good indicator as to how a team will perform in the tournament, we felt that did not encapsulate the entire picture which is why we chose to include data from previous years. For example, no one would have bet on the eighth-seeded North Carolina Tar Heels, a program that has almost always been formidable in decades past, to make it to the championship game in last year's torunament solely on the basis of how well they did during the regular season. 
+- This metric aims to capture some of that uncertainty and unpredictability that March Madness is known for. 
+- Kansas once again ranks number one based on this metric with a value of 5.67. Gonzaga, Duke, Kentucky, and Michigan St. are the other teams with the greatest chances of winning based on our strength ratings.
+- There is a high amount of variability between team seed and the results from this rating, especially near the top of the rankings; seventh seed Michigan State is ranked above second seed Texas by a sizeable margin. 
+---
+
+# Shiny Apps :gem:
+- For each of the visualizations we created, we also developed shiny app interfaces which allow users to dynamically explore the datasets. 
+
+1. The first of these is related to the four power ranking metrics covered in the data analysis section.
+- The app takes 16 distinct team inputs from the user and displays the corresponding information for current year strength, historical strength, historical tournament strength, and overall strength. 
+- The following code was used to make the app dynamic:
+```
+selectizeInput("Teams", label = "Choose 16 teams.", choices = top_performers_2023$Team, multiple = TRUE, options = list(maxItems = 16)),
+actionButton("Button", "Go")
+           
+observeEvent(input$Button, {  
+  top_performers_2023 <- top_performers_2023[Team %in% input$Teams]
+``` 
+- The app can be accessed with this url: https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
+    
 
 
 
