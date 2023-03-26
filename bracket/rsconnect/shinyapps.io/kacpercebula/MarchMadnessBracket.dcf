@@ -1,0 +1,14 @@
+name: MarchMadnessBracket
+title: MarchMadnessBracket
+username:
+account: kacpercebula
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8679660
+bundleId: 7010951
+url: https://kacpercebula.shinyapps.io/MarchMadnessBracket/
+when: 1679873981.35375
+lastSyncTime: 1679873981.35376
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: bracket.R
