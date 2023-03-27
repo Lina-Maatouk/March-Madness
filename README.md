@@ -6,6 +6,11 @@ https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 Kacper, March Madness Bracket shiny app url:
 https://kacpercebula.shinyapps.io/MarchMadnessBracket/
 
+Lina, shiny apps:
+https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/?_ga=2.27696124.1532607671.1679620595-1200594566.1679445868
+https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.30193279.1532607671.1679620595-1200594566.1679445868
+https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.1875569.1532607671.1679620595-1200594566.1679445868
+
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
 ---
