@@ -196,8 +196,7 @@ actionButton("Button", "Go")
 observeEvent(input$Button, {  
   top_performers_2023 <- top_performers_2023[Team %in% input$Teams]
 ``` 
-- The app can be accessed with this url: https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
-    
+- The app can be accessed with this url: https://lukecowan.shinyapps.io/March_Madness_Power_Metric/ 
 
 2- Interactive shiny app in which the user can select as many teams as possible and view their rating change over the seasons from 2016 until 2023: https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/
 We used the data provided by the company 538: https://www.kaggle.com/datasets/raddar/ncaa-men-538-team-ratings
@@ -208,5 +207,15 @@ https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.233135070.1532607671.1
 4- The following dynamic shiny app enables users to conveniently upload a CSV file, which then generates a decision tree model capable of predicting the tournament's final four teams and eventual winner.
 https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1679620595-1200594566.1679445868
 . As long as the columns match the data dictionary, then it should give us a close to accurate prediction. A good example would be using the dataset provided: 2023 Tournament Game Data.csv
+
+5. March Madness Bracket Generator App (Model):
+- This app allows the user to generate a new bracket anytime they want to and focus in on a certain round and/or region(s) to see who the winners and loser's there are. It is calculated to incorparate offsets and accurately matches the teams that need to face each other. It predicts winners for every round and even the championship. 
+- Below shows the data frame that the code generates that it uses
+
+<img width="906" alt="Screen Shot 2023-03-26 at 7 30 44 PM" src="https://user-images.githubusercontent.com/113058755/227815512-80176132-1753-4bef-8dd4-e13db12c65d1.png">
+
+-Below is a screenshot of what the app looks like, the url for the app can be found right here: https://kacpercebula.shinyapps.io/MarchMadnessBracket/
+
+<img width="1430" alt="Screen Shot 2023-03-26 at 7 31 39 PM" src="https://user-images.githubusercontent.com/113058755/227815421-63370231-11b2-4d5c-b9e0-0b2d7a04dcd1.png">
 
 
