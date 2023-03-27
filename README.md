@@ -208,6 +208,7 @@ https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.233135070.1532607671.1
 https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1679620595-1200594566.1679445868
 . As long as the columns match the data dictionary, then it should give us a close to accurate prediction. A good example would be using the dataset provided: 2023 Tournament Game Data.csv: 
 
+![DecisionModel (2)](https://user-images.githubusercontent.com/118494394/227816057-c85395b4-bc80-48d3-97d6-82dd51a5bfd5.png)
 
 
 5. March Madness Bracket Generator App (Model):
