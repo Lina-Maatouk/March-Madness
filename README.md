@@ -220,7 +220,7 @@ power_ranking_metric <- top_performers_2023 %>%
 ---
 
 5. Decision Tree model:
-- First, we created a code to generate the predicted winners in order to create a decision tree graph. Here are detailed steps of this code:
+- First, we created a code to generate the predicted top teams and the winner in order to create a decision tree graph. Here are detailed steps of this code:
 ![TreePrediction](https://user-images.githubusercontent.com/118494394/227818295-62cfda47-2df4-4b36-95e7-ff2b80ef5092.png)
 
 - Next, in order to predict the top 4 final teams in the tournament as well, we also used again the function predict, as shown below:
