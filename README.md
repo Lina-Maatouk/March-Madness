@@ -6,6 +6,13 @@ https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 Kacper, March Madness Bracket shiny app url:
 https://kacpercebula.shinyapps.io/MarchMadnessBracket/
 
+Lina's shiny apps:
+https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/?_ga=2.27696124.1532607671.1679620595-1200594566.1679445868
+
+https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.30193279.1532607671.1679620595-1200594566.1679445868
+
+https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.1875569.1532607671.1679620595-1200594566.1679445868
+
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
 ---
@@ -198,13 +205,17 @@ observeEvent(input$Button, {
 ``` 
 - The app can be accessed with this url: https://lukecowan.shinyapps.io/March_Madness_Power_Metric/ 
 
-2. Interactive shiny app in which the user can select as many teams as possible and view their rating change over the seasons from 2016 until 2023: https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/
+2. 538 Rating app:
+
+- Interactive shiny app in which the user can select as many teams as possible and view their rating change over the seasons from 2016 until 2023: https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/
 We used the data provided by the company 538: https://www.kaggle.com/datasets/raddar/ncaa-men-538-team-ratings
 
 3. This decision tree model shows the predicted winners with highest stats of the dataset provided: Tournament Game Data.csv
 https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.233135070.1532607671.1679620595-1200594566.1679445868
 
-4. The following dynamic shiny app enables users to conveniently upload a CSV file, which then generates a decision tree model capable of predicting the tournament's final four teams and eventual winner.
+4. Decision Tree Model Prediction Model:
+
+- The following dynamic shiny app enables users to conveniently upload a CSV file, which then generates a decision tree model capable of predicting the tournament's final four teams and eventual winner.
 https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1679620595-1200594566.1679445868
 . As long as the columns match the data dictionary, then it should give us a close to accurate prediction. A good example would be using the dataset provided: 2023 Tournament Game Data.csv: 
 
