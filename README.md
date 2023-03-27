@@ -3,6 +3,9 @@
 Luke shiny app url:
 https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 
+Kacper, March Madness Bracket shiny app url:
+https://kacpercebula.shinyapps.io/MarchMadnessBracket/
+
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
 ---
