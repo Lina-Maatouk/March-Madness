@@ -6,14 +6,6 @@ https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 Kacper, March Madness Bracket shiny app url:
 https://kacpercebula.shinyapps.io/MarchMadnessBracket/
 
-Lina, shiny apps:
-https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/?_ga=2.27696124.1532607671.1679620595-1200594566.1679445868
-
-https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.30193279.1532607671.1679620595-1200594566.1679445868
-
-https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.1875569.1532607671.1679620595-1200594566.1679445868
-
-
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
 ---
@@ -228,5 +220,9 @@ https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1
 - Below is a screenshot of what the app looks like, the url for the app can be found right here: https://kacpercebula.shinyapps.io/MarchMadnessBracket/
 
 <img width="1430" alt="Screen Shot 2023-03-26 at 7 31 39 PM" src="https://user-images.githubusercontent.com/113058755/227815421-63370231-11b2-4d5c-b9e0-0b2d7a04dcd1.png">
+
+- This app was achieved by using Luke's top performers data frame with the overall strength value as a rating to base calculations for the teams. 
+ - Making a generate_bracket function allowed me to allow the user to generate a new bracket whenever they'd like. Also, using randomized offsets to add or subtract from the rating allowed there to be upsets. Another point worthy note is adding grouping allowed there to be accurate team match ups. For example, 1-16 and 8-9 Seeds verse each other in this app as well as the official March Madness tournament
+ - Overall, this app gives the user an idea of what teams to choose when making their bracket. It uses real world calcuations and data to make it's decisions and leave it up to probability for upsets. It may possibly create the perfect bracket without anyone ever knowing.
 
 
