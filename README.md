@@ -6,13 +6,6 @@ https://lukecowan.shinyapps.io/March_Madness_Power_Metric/
 Kacper, March Madness Bracket shiny app url:
 https://kacpercebula.shinyapps.io/MarchMadnessBracket/
 
-Lina's shiny apps:
-https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/?_ga=2.27696124.1532607671.1679620595-1200594566.1679445868
-
-https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.30193279.1532607671.1679620595-1200594566.1679445868
-
-https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.1875569.1532607671.1679620595-1200594566.1679445868
-
 ## Introduction
 - This document will provide a data dictionary, describe the data cleaning and preparation process, provide analysis through visualizations, and cover the shiny apps and model that were created for the 2023 NCAA Men's March Madness Basketball Tournament.
 ---
@@ -38,14 +31,14 @@ The variables that we used and/or created include:
 ---
 ## Data Cleaning :broom:
 1. Selected the columns we deemed necessary or useful for analysis and changed the variable names for easier referencing
-```
+```r
 cleanGameData <- GameData %>%
   select(SEED, TEAM, KENPOM.ADJUSTED.DEFENSE, KENPOM.ADJUSTED.OFFENSE, ELITE.SOS, EFG.., WIN.., BARTHAG) %>%
   rename(Seed = SEED, Team = TEAM, DefenseKP = KENPOM.ADJUSTED.DEFENSE, OffenseKP = KENPOM.ADJUSTED.OFFENSE, SOS = ELITE.SOS, Barthag = BARTHAG)
 ```
  
 2. Removed teams that are not in the 2023 NCAA March Madness Tournament and filtered for only distinct team and year values in tournament_game_data dataset
-```
+```r
 team_history_data <- tournament_game_data %>%
   dplyr::filter(TEAM %in%  c("Alabama", "Houston", "Kansas", "Purdue", "Arizona", "Marquette", "Texas", "UCLA",
                              "Baylor", "Gonzaga", "Kansas St.", "Xavier", "Connecticut", "Indiana", "Tennessee",
@@ -65,7 +58,7 @@ team_history_data <- tournament_game_data %>%
 
 ## Data Preparation :hammer:
 1. Created pivot tables (grouped by team) for the six distinct stats involved in the Historical_Strength metric
-```
+```r
 offense <-  team_history_data %>%
   group_by(TEAM) %>%
   summarise(Overall_Offense = sum(KENPOM.ADJUSTED.OFFENSE)) %>%
@@ -77,7 +70,7 @@ offense <-  team_history_data %>%
 - Code for the other five variables is the same apart from variable names 
 
 2. Joined the pivot table values into the same data frame and reverted the variable names to their orginal state 
-```
+```r
 historical_season_strength <- team_history_data %>%
   group_by(TEAM) %>%
   summarise(Tournament_Appearances = n()) %>%
@@ -95,7 +88,7 @@ historical_season_strength <- team_history_data %>%
                 "Win_Percentage" = "win_percentage$Win_Percentage") %>%
 ```
 3. Created a data table to assign point values to how far a team made it in the tournament
-```
+```r
 TEAM.ROUND <- c(64, 32, 16, 8, 4, 2, 1)
 
 rating <- c(0, 1, 2, 3, 4, 5, 6)
@@ -104,14 +97,14 @@ round_scoring <- data.table(TEAM.ROUND, rating)
 ```
 
 4. Joined the data table to enable calculation of Historcial_Tournament_Strength
-```
+```r
 tournament_performance <- team_history_data %>%
   group_by(TEAM, TEAM.ROUND) %>%
   summarise(Tournament_Appearances = n()) %>%
   left_join(round_scoring, by = c("TEAM.ROUND")) 
 ```
 5. Merged three newly created metrics into the same dataframe to enable dynamic visualization creation in shiny apps
-```
+```r
 top_performers_2023 <- top_performers_2023[historical_season_strength, Historical_Strength:= i.Historical_Strength,on =.(Team = TEAM)]
 
 top_performers_2023 <- top_performers_2023[tournament_performance, Historical_Tournament_Strength:= i.Historical_Tournament_Strength,on =.(Team = TEAM)] %>%
@@ -119,12 +112,41 @@ top_performers_2023 <- top_performers_2023[tournament_performance, Historical_To
 
 top_performers_2023 <- top_performers_2023[power_ranking_metric, Overall_Team_Rating:= i.Overall_Team_Rating,on =.(Team = Team)]
 ```
+
+### March Madness Bracket
+
+1. Added regions to the dataframe.
+```r
+teams <- c("Alabama", "Houston", "Kansas", "Purdue", "Arizona", "Marquette", "Texas", "UCLA", "Baylor", "Gonzaga", "Kansas St.", "Xavier", "Connecticut", "Indiana", "Tennessee", "Virginia", "Duke", "Miami FL", "Saint Mary's", "San Diego St.", "Creighton", "Iowa St.", "Kentucky", "TCU", "Michigan St.", "Missouri", "Northwestern", "Texas A&M", "Arkansas", "Iowa", "Maryland", "Memphis", "Auburn", "Florida Atlantic", "Illinois", "West Virginia", "Boise St.", "Penn St.", "USC", "Utah St.", "Arizona St.", "North Carolina St.", "Pittsburgh", "Providence", "College of Charleston", "Drake", "Oral Roberts", "VCU", "Furman", "Iona", "Kent St.", "Louisiana Lafayette", "Grand Canyon", "Kennesaw St.", "Montana St.", "UC Santa Barbara", "Colgate", "Princeton", "UNC Asheville", "Vermont", "Fairleigh Dickinson", "Howard", "Northern Kentucky", "Texas A&M Corpus Chris")
+regions <- c("South", "Midwest", "West", "East", "South", "East",             "Midwest", "West", "South", "West", "East",         "Midwest", "West",       "Midwest", "East",      "South", "East",     "Midwest", "West",         "South",           "South", "Midwest",    "East", "West",      "East",            "South", "West",         "Midwest", "West", "Midwest", "South", "East",         "Midwest", "East", "West", "South",                            "West", "Midwest", "East", "South",        "West", "South",                "Midwest", "East",               "South",          "Midwest", "East",      "West", "South", "West", "Midwest", "East",                     "West", "Midwest",           "East",        "South",          "Midwest", "South", "West", "East",                   "East",                      "West", "Midwest",         "South")
+teamsRegions <- data.frame(Team = teams, Region = regions)
+```
+
+2. Added rounds to the dataframe
+```r
+bracket$Round1 <- 0
+bracket$Round2 <- 0
+bracket$Sweet16 <- 0
+bracket$Elite8 <- 0
+bracket$Final4 <- 0
+bracket$Championship <- 0
+```
+
+3. Added offsets as well as groups
+```r
+groupA <- c(1, 16, 8, 9)
+groupB <- c(2, 15, 7, 10)
+groupC <- c(3, 14, 6, 11)
+groupD <- c(4, 13, 5, 12)
+```
+
+
 ---
 
 # Data Analysis :mag:
 1. Which team was the best during the 2022-2023 regular season?
 - We calculated how good each team was on the basis of the six statistics we deemed most important and combined them into our first power ranking metric, Current_Year_Strength
-```
+```r
 mutate(Offensive_Rating = OffenseKP/124.0870,
          Defensive_Rating = 87.3259/DefenseKP,
          National_Rank = Barthag/.959,
@@ -145,7 +167,7 @@ mutate(Offensive_Rating = OffenseKP/124.0870,
 
 2. Which teams have performed the best during the regular season in the last 15 years?
 - After merging the six statistics calculated for the 2008-2022 regular seasons (see step 2 in the data preparation section), we generated our second power ranking metric, Historical_Strength
-```
+```r
 mutate(Historical_Strength = Offensive_Rating + Defensive_Rating + National_Rank + Strength_of_Schedule + Effective_Field_Goal_Percent + Win_Percentage)
 ```
 - As with the previous visualization, we represented this information in a bar graph using ggplot:
@@ -159,7 +181,7 @@ mutate(Historical_Strength = Offensive_Rating + Defensive_Rating + National_Rank
 
 3. Which teams have performed the best in the last 15 NCAA March Madness tournaments?
 - After assigning scoring values to all seven distinct rounds in the tournament bracket, we generated our third power ranking metric, Historical_Tournament_Strength.
-```
+```r
 tournament_performance <- team_history_data %>%
 
   mutate(True_Score = Tournament_Appearances * rating) %>%
@@ -175,7 +197,7 @@ tournament_performance <- team_history_data %>%
 
 4. Who will be this year's winner?
 - In order to predict which team would win the entire tournament we created a final power ranking metric, Overall_Team_rating, based on the previous three metrics.
-```
+```r
 power_ranking_metric <- top_performers_2023 %>%
   select(Seed, Team, Current_Year_Strength, Historical_Strength, Historical_Tournament_Strength) %>%
   mutate(Overall_Team_Rating = ifelse(is.na(Historical_Strength), (Current_Year_Strength * 0.85 + Historical_Tournament_Strength * 0.15),
@@ -196,7 +218,7 @@ power_ranking_metric <- top_performers_2023 %>%
 1. The first of these is related to the four power ranking metrics covered in the data analysis section.
 - The app takes 16 distinct team inputs from the user and displays the corresponding information for current year strength, historical strength, historical tournament strength, and overall strength. 
 - The following code was used to make the app dynamic:
-```
+```r
 selectizeInput("Teams", label = "Choose 16 teams.", choices = top_performers_2023$Team, multiple = TRUE, options = list(maxItems = 16)),
 actionButton("Button", "Go")
            
@@ -205,17 +227,13 @@ observeEvent(input$Button, {
 ``` 
 - The app can be accessed with this url: https://lukecowan.shinyapps.io/March_Madness_Power_Metric/ 
 
-2. 538 Rating app:
-
-- Interactive shiny app in which the user can select as many teams as possible and view their rating change over the seasons from 2016 until 2023: https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/
+2. Interactive shiny app in which the user can select as many teams as possible and view their rating change over the seasons from 2016 until 2023: https://linamaatouk.shinyapps.io/MarchMadnessRatings-LinaMatouk/
 We used the data provided by the company 538: https://www.kaggle.com/datasets/raddar/ncaa-men-538-team-ratings
 
 3. This decision tree model shows the predicted winners with highest stats of the dataset provided: Tournament Game Data.csv
 https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.233135070.1532607671.1679620595-1200594566.1679445868
 
-4. Decision Tree Model Prediction Model:
-
-- The following dynamic shiny app enables users to conveniently upload a CSV file, which then generates a decision tree model capable of predicting the tournament's final four teams and eventual winner.
+4. The following dynamic shiny app enables users to conveniently upload a CSV file, which then generates a decision tree model capable of predicting the tournament's final four teams and eventual winner.
 https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1679620595-1200594566.1679445868
 . As long as the columns match the data dictionary, then it should give us a close to accurate prediction. A good example would be using the dataset provided: 2023 Tournament Game Data.csv: 
 
