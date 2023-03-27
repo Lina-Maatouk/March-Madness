@@ -208,7 +208,7 @@ https://linamaatouk.shinyapps.io/DecisionTreeModel/?_ga=2.233135070.1532607671.1
 https://linamaatouk.shinyapps.io/DecisionTreeWinner/?_ga=2.65311342.1532607671.1679620595-1200594566.1679445868
 . As long as the columns match the data dictionary, then it should give us a close to accurate prediction. A good example would be using the dataset provided: 2023 Tournament Game Data.csv: 
 
-![DecisionModel](https://user-images.githubusercontent.com/118494394/227815959-9d16b73c-abea-4653-8b88-022fe360eee0.png)
+
 
 5. March Madness Bracket Generator App (Model):
 - This app allows the user to generate a new bracket anytime they want to and focus in on a certain round and/or region(s) to see who the winners and loser's there are. It is calculated to incorparate offsets and accurately matches the teams that need to face each other. It predicts winners for every round and even the championship. 
